@@ -1,32 +1,37 @@
 package com.shalkevich.andrei.intexProject;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigProperties {
 	
-	protected static FileInputStream fileInputStream;
-    protected static Properties PROPERTIES;
+	final String PATH_TO_PROPERTIES = "app.properties";
+	InputStream inputStream;
+	Properties PROPERTIES;
+    
+    public void propertiesInit() {
  
-    static {
         try {
-            fileInputStream = new FileInputStream("src/main/resources/app.properties");
+            
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+            inputStream = cl.getResourceAsStream(PATH_TO_PROPERTIES);
             PROPERTIES = new Properties();
-            PROPERTIES.load(fileInputStream);
+            PROPERTIES.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fileInputStream != null)
+            if (inputStream != null)
                 try {
-                    fileInputStream.close();
+                    inputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
         }
     }
  
-    public static String getSomeProperty(String key) {
+    public String getSomeProperty(String key) {
         return PROPERTIES.getProperty(key);
     }
 
