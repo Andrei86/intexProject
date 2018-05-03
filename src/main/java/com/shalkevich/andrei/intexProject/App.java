@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.shalkevich.andrei.intexProject.exceptions.MyFileNotFoundException;
+import com.shalkevich.andrei.intexProject.exceptions.MyPropertyNotFoundException;
+
 
 /**
  * Class app entry point
@@ -16,50 +19,51 @@ import java.util.stream.Stream;
  */
 public class App {
 
-	public static void main(String[] args) throws FileNotFoundException {
-
-		Stream<String> inputYmlStream = null;
-
-		final String FILE_OUTPUT_NAME = "output.properties";
-
-		ConfigProperties configProperties = new ConfigProperties();
-
-		configProperties.propertiesInit();
-
-		String pathToIntputFile = configProperties.getSomeProperty("path");
-
-		String[] folder = pathToIntputFile.split("/");
-
-		String pathToOutputFile = pathToIntputFile.replace(folder[folder.length - 1],
-				FILE_OUTPUT_NAME);
-
-		File fileForInputStream = new File(pathToIntputFile);
-
-		if (!fileForInputStream.exists())
-			throw new FileNotFoundException("File .yml not found");
-		else {	
+	public static void main(String[] args) throws IOException {
 		
-			try {
-				inputYmlStream = Files.lines(fileForInputStream.toPath());
-			} catch (IOException ex) {
-				System.out.println("Other IOException in searching input.yml");
-			}
-		}
 		StringBuilder myBuilder = new StringBuilder();
-
 		List<String> myList = new ArrayList<String>();
-
-		Parser<String> myParser = new YmlToPropertiesParser(myBuilder, myList);
-
-		Stream<String> outPropStream = myParser.parse(inputYmlStream);
-
-		try {
-			Files.write(Paths.get(pathToOutputFile), (Iterable<String>) outPropStream::iterator);
-		} catch (IOException ex) {
-			System.out.println("Other IOException in creating of output.properties");
-		}
+		YmlToPropertiesParser parser;
+		FileManager myFileManager;
+		String pathValue = null;
+		File inputFile = null;
+		File outputFile;
+		Stream<String> inputStream = null;
+		Stream<String> outputStream;
 		
-		new File(pathToIntputFile).delete();
+		ConfigProperties configProperties = new ConfigProperties("app.properties");
+		
+		try{
+		configProperties.propertiesInit();
+		
+		pathValue = configProperties.getSomeProperty("path");
+		
+		myFileManager = new FileManager(pathValue);
+		
+		inputFile = myFileManager.createInputFile(pathValue);
+		inputStream = Files.lines((inputFile).toPath());
+		
+		parser = new YmlToPropertiesParser(myBuilder, myList);
+		
+		outputStream = parser.parse(inputStream);
+		
+		outputFile = myFileManager.createOutputFile("output");
+		
+		Files.write(outputFile.toPath(), (Iterable<String>)outputStream::iterator);
+		
+		myFileManager.deleteFile(inputFile);
+		
+		System.out.print("---   DONE!   ---");
+		
+		}catch(MyFileNotFoundException ex){
+		
+			System.out.println(ex.getMessage());
+			
+		}catch(MyPropertyNotFoundException ex){
+		
+			System.out.println(ex.getMessage());
+		}
+
 	}
 
 }

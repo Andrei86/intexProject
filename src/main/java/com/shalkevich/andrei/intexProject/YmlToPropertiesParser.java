@@ -57,7 +57,7 @@ public class YmlToPropertiesParser implements Parser<String>{
 	@Override
 	public Stream<String> parse(Stream<String> inputStream) {
 		
-		inputStream.map(s -> s.trim()).forEach(x -> {
+		inputStream.map(s->s.trim()).forEach(x->{
 			if (x.contains(":")) {
 
 				if (!x.contains(" "))
