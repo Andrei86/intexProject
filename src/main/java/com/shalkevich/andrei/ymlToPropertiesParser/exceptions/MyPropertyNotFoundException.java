@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject.exceptions;
+package com.shalkevich.andrei.ymlToPropertiesParser.exceptions;
 
 import java.io.IOException;
 

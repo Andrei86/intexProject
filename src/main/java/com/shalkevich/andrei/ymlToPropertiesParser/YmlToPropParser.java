@@ -1,7 +1,10 @@
-package com.shalkevich.andrei.intexProject;
+package com.shalkevich.andrei.ymlToPropertiesParser;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -9,7 +12,9 @@ import java.util.stream.Stream;
  * @author Andrei Shalkevich
  *
  */
-public class YmlToPropertiesParser implements Parser<String>{
+public class YmlToPropParser implements Parser<String>{
+	
+	final static Logger logger = LogManager.getLogger(YmlToPropParser.class);
 	
 	/**
 	 * String builder field
@@ -26,7 +31,7 @@ public class YmlToPropertiesParser implements Parser<String>{
 	 * @param builder - output string builder
 	 * @param list - list for output strings
 	 */
-	public YmlToPropertiesParser(StringBuilder builder, List<String> list) {
+	public YmlToPropParser(StringBuilder builder, List<String> list) {
 		super();
 		this.builder = builder;
 		this.list = list;
@@ -56,6 +61,8 @@ public class YmlToPropertiesParser implements Parser<String>{
      */
 	@Override
 	public Stream<String> parse(Stream<String> inputStream) {
+		
+		logger.trace("Inside parse() method");
 		
 		inputStream.map(s->s.trim()).forEach(x->{
 			if (x.contains(":")) {

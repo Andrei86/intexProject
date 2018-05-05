@@ -1,17 +1,22 @@
-package com.shalkevich.andrei.intexProject;
+package com.shalkevich.andrei.ymlToPropertiesParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.shalkevich.andrei.intexProject.exceptions.MyFileNotFoundException;
-import com.shalkevich.andrei.intexProject.exceptions.MyPropertyNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.shalkevich.andrei.ymlToPropertiesParser.exceptions.MyFileNotFoundException;
+import com.shalkevich.andrei.ymlToPropertiesParser.exceptions.MyPropertyNotFoundException;
 
 /**
  * Class for working with properties configuration files 
  * @author Andrei Shalkevich
  */
 public class ConfigProperties {
+	
+	final static Logger logger = LogManager.getLogger(ConfigProperties.class);
 	
 	/**
 	 *Field for title properties file on CLASSPATH
@@ -39,6 +44,8 @@ public class ConfigProperties {
 	 * from app.properties configuration file
 	 */
 	public void propertiesInit() throws MyFileNotFoundException {
+		
+		logger.trace("Inside propertiesInit() method");
 
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
@@ -51,6 +58,7 @@ public class ConfigProperties {
 			PROPERTIES = new Properties();
 			PROPERTIES.load(inputStream);
 		} catch (IOException e) {
+			
 			e.printStackTrace();
 		} finally {
 			if (inputStream != null)
@@ -68,6 +76,9 @@ public class ConfigProperties {
      * @return return value from properties file
      */
     public String getSomeProperty(String pathKey) throws MyPropertyNotFoundException{
+    	
+    	logger.trace(String.format("Inside getSomeProperty method with key parameter %s", pathKey));
+    	
         String value = PROPERTIES.getProperty(pathKey);
         
         if(value != null)

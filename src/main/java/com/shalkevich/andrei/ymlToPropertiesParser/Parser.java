@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject;
+package com.shalkevich.andrei.ymlToPropertiesParser;
 
 import java.util.stream.Stream;
 

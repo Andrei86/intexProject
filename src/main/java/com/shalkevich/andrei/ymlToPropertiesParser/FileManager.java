@@ -1,8 +1,11 @@
-package com.shalkevich.andrei.intexProject;
+package com.shalkevich.andrei.ymlToPropertiesParser;
 
 import java.io.File;
 
-import com.shalkevich.andrei.intexProject.exceptions.MyFileNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.shalkevich.andrei.ymlToPropertiesParser.exceptions.MyFileNotFoundException;
 
 
 /**
@@ -11,6 +14,8 @@ import com.shalkevich.andrei.intexProject.exceptions.MyFileNotFoundException;
  *
  */
 public class FileManager {
+	
+	final static Logger logger = LogManager.getLogger(FileManager.class);
 	
 	/**
 	 *Field for path key to input .yml file
@@ -31,6 +36,8 @@ public class FileManager {
      */
 	public File createInputFile(String pathToInputFile) throws MyFileNotFoundException {
 	
+	logger.trace(String.format("Inside createInputFile() method with parameter pathToInputFile = %s", pathToInputFile));
+		
 	File inputFile = new File(pathToInputFile);
 	
 	if(inputFile.exists())
@@ -45,7 +52,9 @@ public class FileManager {
      * @param outputFileName - string path key to output .yml file name
      */
 	public File createOutputFile(String outputFileName) {
-
+		
+		logger.trace(String.format("Inside createOutputFile() method with parameter outputFileName = %s", outputFileName));
+		
 		String[] folder = pathToInputFile.split("/");
 
 		String pathToOutputFile = pathToInputFile.replace(folder[folder.length - 1], outputFileName) + ".properties";
@@ -61,6 +70,9 @@ public class FileManager {
      * @param file - file for deleting
      */
 	public void deleteFile(File file) {
+		
+		logger.trace("Inside deleteFile() method");
+		
 		if (file.exists())
 			file.delete();
 	}

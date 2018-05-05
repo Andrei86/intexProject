@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject;
+package com.shalkevich.andrei.ymlToPropertiesParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.shalkevich.andrei.intexProject.exceptions.MyFileNotFoundException;
-import com.shalkevich.andrei.intexProject.exceptions.MyPropertyNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.shalkevich.andrei.ymlToPropertiesParser.exceptions.MyFileNotFoundException;
+import com.shalkevich.andrei.ymlToPropertiesParser.exceptions.MyPropertyNotFoundException;
 
 
 /**
@@ -18,12 +21,14 @@ import com.shalkevich.andrei.intexProject.exceptions.MyPropertyNotFoundException
  * @author Andrei Shalkevich
  */
 public class App {
+	
+	static final Logger logger = LogManager.getLogger(App.class);
 
 	public static void main(String[] args) throws IOException {
 		
 		StringBuilder myBuilder = new StringBuilder();
 		List<String> myList = new ArrayList<String>();
-		YmlToPropertiesParser parser;
+		YmlToPropParser parser;
 		FileManager myFileManager;
 		String pathValue = null;
 		File inputFile = null;
@@ -43,7 +48,7 @@ public class App {
 		inputFile = myFileManager.createInputFile(pathValue);
 		inputStream = Files.lines((inputFile).toPath());
 		
-		parser = new YmlToPropertiesParser(myBuilder, myList);
+		parser = new YmlToPropParser(myBuilder, myList);
 		
 		outputStream = parser.parse(inputStream);
 		
@@ -56,12 +61,13 @@ public class App {
 		System.out.print("---   DONE!   ---");
 		
 		}catch(MyFileNotFoundException ex){
-		
-			System.out.println(ex.getMessage());
+			
+			logger.error("Exception", ex);
 			
 		}catch(MyPropertyNotFoundException ex){
+			
+			logger.error("Exception", ex);
 		
-			System.out.println(ex.getMessage());
 		}
 
 	}
