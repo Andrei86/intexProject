@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.ymlToPropertiesParser;
+package com.shalkevich.andrei.intexProject.utils.Parser;
 
 import java.util.stream.Stream;
 
@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  *
  * @param <T>
  */
-public interface Parser<T> {
+public interface IParser<T> {
 	
 	/**Parse method
 	 * @param streamForInput - stream for input for parsing

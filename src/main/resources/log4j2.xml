@@ -7,22 +7,22 @@
 		</Console>
 		
 		
-		<RandomAccessFile name="RandomAccessFile" fileName="logs/app.log">
+		<File name="FileAppender" fileName="logs/app.log" append="true">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-		</RandomAccessFile>
+		</File>
 		
 	</Appenders>
 
 	<Loggers>
 	
-		<Logger level="debug" name="ParsLogger"
-			additivity="false">
-			<AppenderRef ref="RandomAccessFile"/>
-		</Logger>
-		
 		<Root level="all">
 		    <AppenderRef ref="Console" />
 		</Root>
+	
+		<Logger level="debug" name="ParsLogger"
+			additivity="false">
+			<AppenderRef ref="FileAppender"/>
+		</Logger>
 		
 	</Loggers>
 
