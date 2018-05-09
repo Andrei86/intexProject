@@ -2,76 +2,72 @@ package com.shalkevich.andrei.intexProject.utils.Parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-
+import java.util.Set;
+import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertiesFileNotFoundException;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertyNotFoundException;
-
 import lombok.Data;
 
 /**
- * Class for working with properties configuration files 
+ * Class for working with properties configuration files to retrieve properties key-values
  * @author Andrei Shalkevich
  */
 @Data
 public class ConfigProperties {
 	
-	private final static Logger logger = LogManager.getLogger(ConfigProperties.class);
-	
+	private final static Logger logger = LogManager.getLogger(ConfigProperties.class.getName());
+
 	/**
-	 *Field for properties file name on CLASSPATH
+	 * Field for properties file name on CLASSPATH
 	 */
-	private String propertiesFile;
-	private InputStream inputStream;
-	private Properties properties;
-	
-	public ConfigProperties(String propertiesFile) {
+	private final String PROPERTIES_FILE = "app.properties";
+	private Properties properties = null;
 
-		this.propertiesFile = propertiesFile;
-	}
-    
-	/**
-	 * Initialization method for properties loading 
-	 * from .properties configuration file
-	 */
-	public void propertiesInitializer() throws PropertiesFileNotFoundException {
+	public ConfigProperties() throws PropertiesFileNotFoundException {
 
-		logger.info("Inside propertiesInitializer() method");
+		logger.info("Inside ConfigProperties class constructor.");
 
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-
-		inputStream = cl.getResourceAsStream(propertiesFile);
-
-		if (inputStream == null)
-			throw new PropertiesFileNotFoundException(
-					String.format("There is no such %s file on CLASSPATH.", propertiesFile));
-
+		InputStream inputStream = null;
 		try {
-			properties = new Properties();
+			this.properties = new Properties();
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			inputStream = cl.getResourceAsStream(PROPERTIES_FILE);
+			if (inputStream == null)
+				throw new PropertiesFileNotFoundException(
+						String.format("There is no such %s file on CLASSPATH.", PROPERTIES_FILE));
+
 			properties.load(inputStream);
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			logger.error(e.getClass().getSimpleName() + " while calling ConfigProperties constructor.");
 		}
 	}
     
     /**
-     * Method for property getting from configuration properties file
-     * @param key - key for properties file
-     * @return return value from properties file
-     */
-    public String getCurrentProperty(String propertyName) throws PropertyNotFoundException{
+	 *Method to retreive set of keys from .properties file
+	 */
+    public Set<Object> getAllKeys(){
+    	logger.info("Inside getAllKeys() method of ConfigProperties class.");
+        Set<Object> keys = properties.keySet();
+        return keys;
+    }
+    
+    /**
+	 *Method to retrieve properties as key-value map from .properties file
+	 */
+    public Map<String, String> getPropertiesKeysValues(Set<Object> keys){
     	
-    	logger.info(String.format("Inside getSomeProperty method with key parameter %s", propertyName));
-    	
-        String propertyValue = properties.getProperty(propertyName);
-        
-        if(propertyValue != null)
-        	return propertyValue;
-        else
-        	throw new PropertyNotFoundException(String.format("There is no %s property in your .properties file. Please put correct property name.", propertyName));
+    	logger.info("Inside getPropertiesKeysValues method of ConfigProperties class.");
+    	Stream<Object> keyStream = keys.stream();
+    	Map<String, String> propertiesKeyValueMap = new HashMap<>();
+    	keyStream.forEach((s)->{
+    		String propertyKey = String.valueOf(s);
+    		String propertyValue = properties.getProperty(propertyKey);
+    		propertiesKeyValueMap.put(propertyKey, propertyValue);
+    	});
+        return propertiesKeyValueMap;
     }
 }

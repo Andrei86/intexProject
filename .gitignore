@@ -4,3 +4,4 @@
 target/
 .idea
 .ide
+logs/

@@ -1,10 +1,13 @@
 package com.shalkevich.andrei.intexProject.utils.Parser.exceptions;
 
+import lombok.Data;
+
 /**
  * @author Andrei Shalkevich
  */
-public class PropertyNotFoundException extends Exception{
-
+@Data
+public class NotDirectoryException extends Exception {
+	
 	private static final long serialVersionUID = 1L;
 	private String message;
 
@@ -12,7 +15,7 @@ public class PropertyNotFoundException extends Exception{
 	 * Constructor
 	 * @param message - message from exception
 	 */
-	public PropertyNotFoundException(String message){	
+	public NotDirectoryException(String message) {
 		this.message = message;
 	}
 }

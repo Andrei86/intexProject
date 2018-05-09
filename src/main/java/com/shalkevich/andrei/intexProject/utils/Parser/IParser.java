@@ -1,5 +1,6 @@
 package com.shalkevich.andrei.intexProject.utils.Parser;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -15,5 +16,5 @@ public interface IParser<T> {
 	 * @param streamForInput - stream for input for parsing
 	 * @return stream
 	 */
-	Stream<T> parse(Stream<T> streamForInput);
+	List<T> parse(Stream<T> streamForInput) throws Exception;
 }

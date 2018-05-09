@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
+
 import lombok.Data;
 
 /**
@@ -15,48 +18,54 @@ import lombok.Data;
 @Data
 public class FileSearcher {
 	
-	private final static Logger logger = LogManager.getLogger(FileSearcher.class);
+private final static Logger logger = LogManager.getLogger(FileSearcher.class);
 	
-	private AppConfigProperties appConfigPropertiesObject;
-	private ParseConfigProperties parseConfigPropertiesObject;
+	/**
+	* File's to parse extention field
+	*/
 	private String inputFileExtentionToSearch;
+	
+	/**
+	* Path to input files searching for parsing
+	*/
 	private File pathToInputFiles;
+	
+	/**
+	* Field for save paths to searched files for parsing
+	*/
 	private List<String> foundedFiles = new ArrayList<String>();
-	
-	public FileSearcher(AppConfigProperties appConfigPropertiesObject, ParseConfigProperties parseConfigPropertiesObject) {
+
+	public FileSearcher(String inputFileExtentionToSearch, File pathToInputFiles) {
 		super();
-		this.appConfigPropertiesObject = appConfigPropertiesObject;
-		this.parseConfigPropertiesObject = parseConfigPropertiesObject;
-		
-		this.pathToInputFiles = new File(appConfigPropertiesObject.getPathToInputFile());
-		this.inputFileExtentionToSearch = parseConfigPropertiesObject.getInputFileExtention();
+		this.inputFileExtentionToSearch = inputFileExtentionToSearch;
+		this.pathToInputFiles = pathToInputFiles;
 	}
 	
-	public void searchDirectory() {
-
-		if (pathToInputFiles.isDirectory()) {
-			search(pathToInputFiles);
-		} else {
-			logger.info(pathToInputFiles.getAbsoluteFile() + " is not a directory!");
-			/*
-			 * may throw an exception hear
-			 */
-		}
-	}
-
-	private void search(File file) {
+	/**
+	* Search method for adding files to foundedFiles list for parsing
+	* @param File file - directory for searching
+	*/
+	public void search(File file) throws NotDirectoryException{
 
 		if (file.isDirectory()) {
+
 			logger.info("Searching directory ... " + file.getAbsoluteFile());
+			
+			
 			Arrays.stream(file.listFiles()).forEach((f) -> {
 				if (f.isDirectory()) {
-					search(f);
+					try {
+						search(f);
+					} catch (NotDirectoryException ex) {
+						logger.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+					}
 				} else {
 					if (f.getName().toLowerCase().endsWith(getInputFileExtentionToSearch())) {
 						foundedFiles.add(f.getAbsoluteFile().toString());
 					}
 				}
 			});
-		}
+		} else
+			throw new NotDirectoryException(String.format("%s is not a directory", file.getAbsolutePath()));
 	}
 }

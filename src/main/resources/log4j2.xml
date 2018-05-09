@@ -6,25 +6,20 @@
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 		
-		
-		<File name="FileAppender" fileName="logs/app.log" append="true">
+		<File name="FileAppender" fileName="logs/app.log" bufferedIO="false" append="true">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</File>
 		
 	</Appenders>
 
 	<Loggers>
-	
-		<Root level="all">
-		    <AppenderRef ref="Console" />
-		</Root>
-	
-		<Logger level="debug" name="ParsLogger"
-			additivity="false">
+		<Logger level="debug" name="com.shalkevich.andrei.intexProject.utils.Parser">
 			<AppenderRef ref="FileAppender"/>
 		</Logger>
-		
+	
+		<Root level="all">
+		    <AppenderRef ref="Console"/>
+		</Root>
 	</Loggers>
-
 
 </Configuration>
