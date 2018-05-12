@@ -3,18 +3,20 @@ package com.shalkevich.andrei.intexProject.utils.Parser;
 import java.util.List;
 import java.util.stream.Stream;
 
-
 /**
- * Generic interface for parser
+ * Generic interface for parsing
+ * 
  * @author Andrei Shalkevich
  *
  * @param <T>
  */
 public interface IParser<T> {
-	
-	/**Parse method
-	 * @param streamForInput - stream for input for parsing
-	 * @return stream
-	 */
-	List<T> parse(Stream<T> streamForInput) throws Exception;
+  /**
+   * Parse method
+   * 
+   * @param Stream<T> streamForInput - input stream for parsing
+   * @return List<T> list of objects after parsing
+   * @throws Exception
+   */
+  List<T> parse(Stream<T> streamForInput) throws Exception;
 }

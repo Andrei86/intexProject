@@ -1,50 +1,38 @@
 package com.shalkevich.andrei.intexProject.utils.Parser;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.List;
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertiesFileNotFoundException;
+import lombok.extern.log4j.Log4j2;
 
 /**
- * Class for for performance parsing operation
+ * Class for performance parsing operation
+ * 
  * @author Andrei Shalkevich
  */
+@Log4j2
 public class ParseApplication {
 
-	private static final Logger logger = LogManager.getLogger(ParseApplication.class);
-
-	public static void main(String[] args) {
-		
-		logger.trace("Inside parse application.");
-		try {
-			ConfigProperties configPropertiesObject = new ConfigProperties();
-			Set<Object> propertiesKeys = configPropertiesObject.getAllKeys();
-			Map<String, String> keysPropertiesMap = configPropertiesObject.getPropertiesKeysValues(propertiesKeys);
-			String inputFileExtentionToSearch = keysPropertiesMap.get("inputFileExtension");
-			File pathToInputFiles = new File(keysPropertiesMap.get("path"));
-			FileSearcher fileSearcher = new FileSearcher(inputFileExtentionToSearch, pathToInputFiles);
-			fileSearcher.search(fileSearcher.getPathToInputFiles());
-			Boolean isSeparateSaveMode = Boolean.valueOf(keysPropertiesMap.get("isSeparateSaveMode"));
-			String keyDelimiter = keysPropertiesMap.get("delimiter");
-			ParserImplementator parserImplementator = new ParserImplementator(keyDelimiter);
-			String outputFileNameAndExtention = keysPropertiesMap.get("outputFileName")
-					+ keysPropertiesMap.get("outputFileExtension");
-			if (!isSeparateSaveMode) {
-				parserImplementator.writeToSingleOutputFileWhileParsing(outputFileNameAndExtention,
-						pathToInputFiles.getAbsolutePath(), fileSearcher.getFoundedFiles());
-			} else {
-				parserImplementator.writeToSeparateOutputFileWhileParsing(outputFileNameAndExtention,
-						pathToInputFiles.getAbsolutePath(), fileSearcher.getFoundedFiles());
-			}
-
-		} catch (PropertiesFileNotFoundException ex) {
-			logger.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
-		} catch (NotDirectoryException ex) {
-			logger.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
-		}
-	}
+  public static void main(String[] args) {
+    try {
+      ConfigProperties configPropertiesObject = new ConfigProperties();
+      configPropertiesObject.initializePropertiesObject();
+      FileSearcher fileSearcher = new FileSearcher(configPropertiesObject);
+      fileSearcher.search(new File(configPropertiesObject.getProperties().getProperty("path")));
+      List<String> filesForParsing = fileSearcher.getFoundedFiles();
+      Boolean isSeparateSaveMode =
+          Boolean.valueOf(configPropertiesObject.getProperties().getProperty("isSeparateSaveMode"));
+      ParserImplementator parserImplementator = new ParserImplementator(configPropertiesObject);
+      if (!isSeparateSaveMode) {
+        parserImplementator.writeToSingleOutputFileWhileParsing(filesForParsing);
+      } else {
+        parserImplementator.writeToSeparateOutputFileWhileParsing(filesForParsing);
+      }
+    } catch (PropertiesFileNotFoundException ex) {
+      log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+    } catch (NotDirectoryException ex) {
+      log.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+    }
+  }
 }
