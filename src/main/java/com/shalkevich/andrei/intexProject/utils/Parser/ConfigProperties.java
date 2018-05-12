@@ -8,15 +8,14 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Class for initializing Properties object
- * from .properties configuration file
+ * Class for initializing Properties object from .properties configuration file
  * 
  * @author Andrei Shalkevich
  */
 @Log4j2
 @Getter
 public class ConfigProperties {
-
+  private String PROPERTIES_FILE_NAME = "app.properties";
   private Properties properties;
 
   /**
@@ -24,14 +23,13 @@ public class ConfigProperties {
    */
   public void initializePropertiesObject() throws PropertiesFileNotFoundException {
     try {
-      InputStream inputStream;
-      this.properties = new Properties();
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      inputStream = cl.getResourceAsStream("app.properties");
+      InputStream inputStream = cl.getResourceAsStream(PROPERTIES_FILE_NAME);
       if (inputStream == null) {
         throw new PropertiesFileNotFoundException(
             "There is no such app.properties file on CLASSPATH.");
       }
+      this.properties = new Properties();
       properties.load(inputStream);
     } catch (IOException | SecurityException ex) {
       log.error(ex.getClass().getSimpleName()

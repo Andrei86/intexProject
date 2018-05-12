@@ -14,8 +14,8 @@ public interface IParser<T> {
   /**
    * Parse method
    * 
-   * @param Stream<T> streamForInput - input stream for parsing
-   * @return List<T> list of objects after parsing
+   * @param streamForInput - input stream for parsing
+   * @return list of objects after parsing
    * @throws Exception
    */
   List<T> parse(Stream<T> streamForInput) throws Exception;

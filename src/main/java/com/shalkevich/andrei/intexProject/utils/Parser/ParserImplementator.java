@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Class for file parsing and saving parsed strings 
- * list to single or separate files depending on parse saving mode
+ * Class for file parsing and saving parsed strings list to single or separate files depending on
+ * parse saving mode
  * 
  * @author Andrei Shalkevich
  */
@@ -23,26 +23,17 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 @RequiredArgsConstructor
 public class ParserImplementator implements IParser<String> {
-
   @NonNull
   private ConfigProperties configPropertiesObj;
-
-  /**
-   * Field for building property's key-value string
-   */
   private StringBuilder propertyBuilder;
-
-  /**
-   * List field for strings after file(s) parsing
-   */
   private List<String> parsedStringsList = new ArrayList<>();
 
   /**
    * Method for input file parsing string by string: deletes spaces, replaces property key
    * delimiters with dots, replaces property key-value delimiter with colon
    * 
-   * @param Stream<String> inputStream - strings stream from input file
-   * @return List<String> list of parsed strings for writing to a file
+   * @param inputStream - strings stream from input file
+   * @return list of parsed strings for writing to a file
    */
   @Override
   public List<String> parse(Stream<String> inputStream) {
@@ -52,10 +43,8 @@ public class ParserImplementator implements IParser<String> {
         if (stringAfterTrim.endsWith(delimiter)) {
           propertyBuilder.append(stringAfterTrim.replace(delimiter, "."));
         } else {
-          String[] propertyKeyValuePair = stringAfterTrim.split(delimiter);
-          String propertyKeyValue =
-              propertyKeyValuePair[0] + ":" + (propertyKeyValuePair[1].trim());
-          parsedStringsList.add(propertyBuilder.toString() + propertyKeyValue);
+          parsedStringsList.add(propertyBuilder.toString()
+              + lastPartOfKeyValuePairForming(stringAfterTrim, delimiter));
         }
       }
     });
@@ -63,9 +52,24 @@ public class ParserImplementator implements IParser<String> {
   }
 
   /**
+   * Method for forming of last part of key-value pair in parsing string
+   * 
+   * @param stringAfterTrim - string after trim with last part of key
+   * and value separated with delimiter
+   * @param delimiter - file for parsing string delimiter
+   * @return string assembled from last part of key and value property
+   */
+  public String lastPartOfKeyValuePairForming(String stringAfterTrim, String delimiter) {
+    String[] propertyKeyValuePair = stringAfterTrim.split(delimiter);
+    String lastPartOfKeyValuePair =
+        propertyKeyValuePair[0].concat(":").concat(propertyKeyValuePair[1].trim());
+    return lastPartOfKeyValuePair;
+  }
+
+  /**
    * Method for converting pathname to Stream<String> object
    * 
-   * @param String pathname
+   * @param pathname for searching files for parsing
    */
   public Stream<String> pathNameToStreamConverting(String pathname) throws IOException {
     return Files.lines(Paths.get(pathname));
@@ -74,8 +78,8 @@ public class ParserImplementator implements IParser<String> {
   /**
    * Method for writing list of parsed strings to a certain file
    * 
-   * @param List<String> parsedStringsList
-   * @param String pathName
+   * @param parsedStringsList
+   * @param pathName of file for writing parsed strings
    * @throws IOException
    */
   public File listToFileWriting(List<String> parsedStringsList, String pathName)

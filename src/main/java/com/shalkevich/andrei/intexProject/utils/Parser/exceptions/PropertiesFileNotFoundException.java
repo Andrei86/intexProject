@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class PropertiesFileNotFoundException extends Exception {
-
-  private static final long serialVersionUID = 1L;
   @NonNull
   private String message;
 
