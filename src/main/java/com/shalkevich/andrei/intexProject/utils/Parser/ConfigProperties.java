@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Class for initializing Properties object from .properties configuration file
+ * Class for initializing Properties object from app.properties file
  * 
  * @author Andrei Shalkevich
  */

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -22,10 +20,8 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 @Getter
-@RequiredArgsConstructor
 public class ParserImplementator implements IParser<String> {
   @Autowired
-  @NonNull
   private ConfigProperties configPropertiesObj;
   private StringBuilder propertyBuilder;
   private List<String> parsedStringsList = new ArrayList<>();
@@ -56,8 +52,8 @@ public class ParserImplementator implements IParser<String> {
   /**
    * Method for forming of last part of key-value pair in parsing string
    * 
-   * @param stringAfterTrim - string after trim with last part of key
-   * and value separated with delimiter
+   * @param stringAfterTrim - string after trim with last part of key and value separated with
+   *        delimiter
    * @param delimiter - file for parsing string delimiter
    * @return string assembled from last part of key and value property
    */

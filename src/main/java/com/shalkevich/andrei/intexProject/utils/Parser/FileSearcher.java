@@ -11,21 +11,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 /**
  * Class for searching files with the specified extension in specified directory
  * 
  * @author Andrei Shalkevich
  */
-@Log4j2
 @Getter
-@RequiredArgsConstructor
 public class FileSearcher {
   @Autowired
-  @NonNull
   private ConfigProperties configPropertiesObject;
 
   /**
