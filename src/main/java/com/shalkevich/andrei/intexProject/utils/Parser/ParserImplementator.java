@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 @RequiredArgsConstructor
 public class ParserImplementator implements IParser<String> {
+  @Autowired
   @NonNull
   private ConfigProperties configPropertiesObj;
   private StringBuilder propertyBuilder;

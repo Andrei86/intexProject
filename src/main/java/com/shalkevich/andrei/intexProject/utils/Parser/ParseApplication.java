@@ -2,7 +2,9 @@ package com.shalkevich.andrei.intexProject.utils.Parser;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
+import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertiesFileNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,10 +17,13 @@ import lombok.NonNull;
 @Getter
 @AllArgsConstructor
 public class ParseApplication {
+  @Autowired
   @NonNull
   private ConfigProperties configPropertiesObject;
+  @Autowired
   @NonNull
   private FileSearcher fileSearcherObject;
+  @Autowired
   @NonNull
   private ParserImplementator parserImplementatorObject;
   
@@ -29,9 +34,11 @@ public class ParseApplication {
    * @return filesForParsing - list of files for parsing
    * @throws NotDirectoryException
    * @throws IOException
+   * @throws PropertiesFileNotFoundException 
    */
   public List<String> getFilesForParsing(FileSearcher fileSearcherObject)
-      throws NotDirectoryException, IOException {
+      throws NotDirectoryException, IOException, PropertiesFileNotFoundException {
+    configPropertiesObject.initializePropertiesObject();
     List<String> allFoundFiles = fileSearcherObject
         .getAllFoundFiles(configPropertiesObject.getProperties().getProperty("path"));
     List<String> filesForParsing = fileSearcherObject.searchFilesForParsing(allFoundFiles);
@@ -44,17 +51,17 @@ public class ParseApplication {
    * 
    * @param parserImplementatorObject for performing parsing process
    * @throws NotDirectoryException
+   * @throws PropertiesFileNotFoundException 
    */
   public void parsingProcess(ParserImplementator parserImplementatorObject)
-      throws NotDirectoryException, IOException {
+      throws NotDirectoryException, IOException, PropertiesFileNotFoundException {
     Boolean isSeparateSaveMode =
         Boolean.valueOf(configPropertiesObject.getProperties().getProperty("isSeparateSaveMode"));
-    ParserImplementator parserImplementator = new ParserImplementator(configPropertiesObject);
     if (!isSeparateSaveMode) {
-      parserImplementator
+      parserImplementatorObject
           .writeToSingleOutputFileWhileParsing(getFilesForParsing(fileSearcherObject));
     } else {
-      parserImplementator
+      parserImplementatorObject
           .writeToSeparateOutputFileWhileParsing(getFilesForParsing(fileSearcherObject));
     }
   }

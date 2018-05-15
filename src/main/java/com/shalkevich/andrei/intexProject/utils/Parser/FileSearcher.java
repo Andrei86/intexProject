@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,6 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 @RequiredArgsConstructor
 public class FileSearcher {
+  @Autowired
   @NonNull
   private ConfigProperties configPropertiesObject;
 
