@@ -1,18 +1,17 @@
-package com.shalkevich.andrei.intexProject.utils.Parser.exceptions;
+package com.shalkevich.andrei.intexProject.Parser.model;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Exception to indicate an error of a lack of .properties file
+ * Exception for an error of the incorrect directory
  * 
  * @author Andrei Shalkevich
  */
 @Getter
 @RequiredArgsConstructor
-public class PropertiesFileNotFoundException extends Exception {
+public class NotDirectoryException extends Exception {
   @NonNull
   private String message;
-
 }

@@ -1,10 +1,10 @@
-package com.shalkevich.andrei.intexProject.utils.Parser;
+package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.io.IOException;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertiesFileNotFoundException;
+import com.shalkevich.andrei.intexProject.Parser.model.NotDirectoryException;
+import com.shalkevich.andrei.intexProject.Parser.model.PropertiesFileNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -13,13 +13,11 @@ import lombok.Getter;
  * @author Andrei Shalkevich
  */
 @Getter
+@AllArgsConstructor
 public class ParseApplication {
-  @Autowired
-  private ConfigProperties configPropertiesObject;
-  @Autowired
   private FileSearcher fileSearcherObject;
-  @Autowired
   private ParserImplementator parserImplementatorObject;
+  private Boolean isSeparateSaveMode;
 
   /**
    * Method for getting files for parsing with certain extension
@@ -32,9 +30,8 @@ public class ParseApplication {
    */
   public List<String> getFilesForParsing(FileSearcher fileSearcherObject)
       throws NotDirectoryException, IOException, PropertiesFileNotFoundException {
-    configPropertiesObject.initializePropertiesObject();
     List<String> allFoundFiles = fileSearcherObject
-        .getAllFoundFiles(configPropertiesObject.getProperties().getProperty("path"));
+        .getAllFoundFiles();
     List<String> filesForParsing = fileSearcherObject.searchFilesForParsing(allFoundFiles);
     return filesForParsing;
   }
@@ -48,8 +45,6 @@ public class ParseApplication {
    */
   public void parsingProcess(ParserImplementator parserImplementatorObject)
       throws NotDirectoryException, IOException, PropertiesFileNotFoundException {
-    Boolean isSeparateSaveMode =
-        Boolean.valueOf(configPropertiesObject.getProperties().getProperty("isSeparateSaveMode"));
     if (!isSeparateSaveMode) {
       parserImplementatorObject
           .writeToSingleOutputFileWhileParsing(getFilesForParsing(fileSearcherObject));

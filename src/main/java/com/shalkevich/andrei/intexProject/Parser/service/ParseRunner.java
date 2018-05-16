@@ -1,10 +1,11 @@
-package com.shalkevich.andrei.intexProject.utils.Parser;
+package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.PropertiesFileNotFoundException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.shalkevich.andrei.intexProject.Parser.config.ParseConfig;
+import com.shalkevich.andrei.intexProject.Parser.model.NotDirectoryException;
+import com.shalkevich.andrei.intexProject.Parser.model.PropertiesFileNotFoundException;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -20,8 +21,7 @@ public class ParseRunner {
    */
   public static void main(String[] args) {
     @SuppressWarnings("resource")
-    ApplicationContext context =
-        new ClassPathXmlApplicationContext(new String[] {"app-config.xml"});
+    ApplicationContext context = new AnnotationConfigApplicationContext(ParseConfig.class);
     ParseApplication parseApp = context.getBean(ParseApplication.class);
     try {
       parseApp.getFilesForParsing(parseApp.getFileSearcherObject());

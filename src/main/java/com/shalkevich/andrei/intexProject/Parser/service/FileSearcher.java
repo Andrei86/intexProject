@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject.utils.Parser;
+package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.shalkevich.andrei.intexProject.utils.Parser.exceptions.NotDirectoryException;
+import com.shalkevich.andrei.intexProject.Parser.model.NotDirectoryException;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -18,9 +18,10 @@ import lombok.Getter;
  * @author Andrei Shalkevich
  */
 @Getter
+@AllArgsConstructor
 public class FileSearcher {
-  @Autowired
-  private ConfigProperties configPropertiesObject;
+  private String path;
+  private String inputFileExtension;
 
   /**
    * Search in directory and in sub directories method for all existing files
@@ -29,14 +30,15 @@ public class FileSearcher {
    * @throws IOException
    * @throws NotDirectoryException
    */
-  public List<String> getAllFoundFiles(String directory) throws NotDirectoryException, IOException {
+  public List<String> getAllFoundFiles() throws NotDirectoryException, IOException {
     List<String> allFoundFiles;
-        try {
-          allFoundFiles = Files.walk(Paths.get(directory)).filter(Files::isRegularFile).map(Path::toString)
-          .collect(Collectors.toList());
-        } catch (NoSuchFileException e) {
-          throw new NotDirectoryException("Pathname for searching files is incorrect. Please, check your path property of app.properties file.");
-        }
+    try {
+      allFoundFiles = Files.walk(Paths.get(path)).filter(Files::isRegularFile)
+          .map(Path::toString).collect(Collectors.toList());
+    } catch (NoSuchFileException e) {
+      throw new NotDirectoryException(
+          "Pathname for searching files is incorrect. Please, check your path property of app.properties file.");
+    }
     return allFoundFiles;
   }
 
@@ -47,9 +49,9 @@ public class FileSearcher {
    * @return filesForParsing - files with specified in app.properties file extension for parsing
    */
   public List<String> searchFilesForParsing(List<String> allFoundFiles) {
-    String inputFileExtension = configPropertiesObject.getProperties().getProperty("inputFileExtension");
     List<String> filesForParsing = new ArrayList<>();
-    allFoundFiles.stream().forEach((file) -> {
+    allFoundFiles.stream().
+    forEach((file) -> {
       if (file.endsWith(inputFileExtension)) {
         filesForParsing.add(file);
       }

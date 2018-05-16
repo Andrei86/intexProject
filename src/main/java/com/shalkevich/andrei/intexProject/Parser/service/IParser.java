@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject.utils.Parser;
+package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.util.List;
 import java.util.stream.Stream;

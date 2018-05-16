@@ -1,4 +1,4 @@
-package com.shalkevich.andrei.intexProject.utils.Parser;
+package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -20,9 +21,16 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 @Getter
+@RequiredArgsConstructor
 public class ParserImplementator implements IParser<String> {
-  @Autowired
-  private ConfigProperties configPropertiesObj;
+  @NonNull
+  private String outputFileExtension;
+  @NonNull
+  private String outputFileName;
+  @NonNull
+  private String delimiter;
+  @NonNull
+  private String path;
   private StringBuilder propertyBuilder;
   private List<String> parsedStringsList = new ArrayList<>();
 
@@ -35,7 +43,6 @@ public class ParserImplementator implements IParser<String> {
    */
   @Override
   public List<String> parse(Stream<String> inputStream) {
-    String delimiter = configPropertiesObj.getProperties().getProperty("delimiter");
     inputStream.map((string) -> string.trim()).forEach((stringAfterTrim) -> {
       if (stringAfterTrim.contains(delimiter)) {
         if (stringAfterTrim.endsWith(delimiter)) {
@@ -53,7 +60,7 @@ public class ParserImplementator implements IParser<String> {
    * Method for forming of last part of key-value pair in parsing string
    * 
    * @param stringAfterTrim - string after trim with last part of key and value separated with
-   *        delimiter
+   * delimiter
    * @param delimiter - file for parsing string delimiter
    * @return string assembled from last part of key and value property
    */
@@ -88,28 +95,13 @@ public class ParserImplementator implements IParser<String> {
   }
 
   /**
-   * Method for getting name and extension of output file
-   */
-  public String getOutFileNameAndExtention() {
-    return configPropertiesObj.getProperties().getProperty("outputFileName")
-        + configPropertiesObj.getProperties().getProperty("outputFileExtension");
-  }
-
-  /**
-   * Method for getting path name for input file(s)
-   */
-  public String getInputFilePathName() {
-    return configPropertiesObj.getProperties().getProperty("path");
-  }
-
-  /**
    * Method for writing list of parsed strings to single output file
    * 
    * @param inputFilesList - pathnames list of input files for parsing
    */
   public void writeToSingleOutputFileWhileParsing(List<String> inputFilesList) {
     String singleOutFileName =
-        getInputFilePathName().concat(File.separator).concat(getOutFileNameAndExtention());
+        path.concat(File.separator).concat(outputFileName).concat(outputFileExtension);
     inputFilesList.stream().forEach((pathName) -> {
       propertyBuilder = new StringBuilder();
       try {
@@ -133,7 +125,7 @@ public class ParserImplementator implements IParser<String> {
     inputFilesList.stream().forEach((pathName) -> {
       propertyBuilder = new StringBuilder();
       String separateOutFileName = new File(pathName).getParent().concat(File.separator)
-          .concat(getOutFileNameAndExtention());
+          .concat(outputFileName).concat(outputFileExtension);
       try {
         Stream<String> streamBeforeFileParsing = pathNameToStreamConverting(pathName);
         parse(streamBeforeFileParsing);

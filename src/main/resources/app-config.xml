@@ -6,6 +6,9 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd">
 	<context:annotation-config />
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location" value="classpath:app.properties" />
+    </bean>
 	<bean
 		class="com.shalkevich.andrei.intexProject.utils.Parser.ParseApplication" />
 	<bean
