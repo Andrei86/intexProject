@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Exception to indicate an error of a lack of .properties file
+ * Exception to indicate that property in app.properties file is null
  * 
  * @author Andrei Shalkevich
  */
 @Getter
 @AllArgsConstructor
-public class PropertiesFileNotFoundException extends Exception {
+public class PropertyIsNullException extends Exception {
   private String message;
 }

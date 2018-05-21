@@ -1,8 +1,7 @@
 package com.shalkevich.andrei.intexProject.Parser.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Exception for an error of the incorrect directory
@@ -10,8 +9,7 @@ import lombok.RequiredArgsConstructor;
  * @author Andrei Shalkevich
  */
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class NotDirectoryException extends Exception {
-  @NonNull
   private String message;
 }

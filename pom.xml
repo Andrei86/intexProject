@@ -12,6 +12,8 @@
         <junit.jupiter.version>5.2.0</junit.jupiter.version>
         <log4j.version>2.4.1</log4j.version>
         <junit.platform.version>1.2.0</junit.platform.version>
+        <spring.version>5.0.5.RELEASE</spring.version>
+        <compiler.plugin.version>3.3</compiler.plugin.version>
     </properties>
 
 	<dependencies>
@@ -28,7 +30,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>5.0.5.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -55,7 +57,7 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.3</version>
+			<version>${compiler.plugin.version}</version>
 			<configuration>
 				<source>${java.version}</source>
 				<target>${java.version}</target>

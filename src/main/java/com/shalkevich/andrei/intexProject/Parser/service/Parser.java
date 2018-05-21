@@ -1,7 +1,6 @@
 package com.shalkevich.andrei.intexProject.Parser.service;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Generic interface for parsing
@@ -9,8 +8,10 @@ import java.util.stream.Stream;
  * @author Andrei Shalkevich
  *
  * @param <T>
+ * @param pathName - destination file for writing parsed strings
+ * @param delimiter - source file string delimiter
  */
-public interface IParser<T> {
+public interface Parser<T> {
   /**
    * Parse method
    * 
@@ -18,5 +19,5 @@ public interface IParser<T> {
    * @return list of objects after parsing
    * @throws Exception
    */
-  List<T> parse(Stream<T> streamForInput) throws Exception;
+  List<T> parse(String pathName, String delimiter) throws Exception;
 }
