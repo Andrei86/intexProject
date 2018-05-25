@@ -6,6 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
+/**
+ * Configuration class which points to source file of properties,
+ * place to search for beans and calls PropertySourcesPlaceholderConfigurer
+ * object to read the properties from file
+ * 
+ * @author Andrei Shalkevich
+ */
 @Configuration
 @PropertySource("classpath:app.properties")
 @ComponentScan("com.shalkevich.andrei.intexProject.Parser.service")
