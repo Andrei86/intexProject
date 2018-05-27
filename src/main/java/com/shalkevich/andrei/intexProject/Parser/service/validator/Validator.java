@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Service
 @Log4j2
-public class PropValidator {
+public class Validator {
 
   private static final String PROPERTIES_FILE_NAME = "app.properties";
   private Properties properties = new Properties();
@@ -38,7 +38,7 @@ public class PropValidator {
    */
   public void propInit() throws FileNotFoundException {
     InputStream inputStream =
-        PropValidator.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
+        Validator.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
     if (inputStream == null) {
       throw new FileNotFoundException("There is no such app.properties file on CLASSPATH.");
     }
@@ -51,11 +51,11 @@ public class PropValidator {
   }
 
   /**
-   * Validating for null values of properties file
+   * Checking for null values of properties file
    * 
    * @throws EmptyPropertyException
    */
-  public void nullValidation() throws EmptyPropertyException {
+  public void emptyValueCheck() throws EmptyPropertyException {
     log.info("Inside nullValidation() method.");
     Set<Object> keySet = properties.keySet();
     for (Object key : keySet) {
@@ -67,12 +67,12 @@ public class PropValidator {
   }
 
   /**
-   * Validating for correct path value of properties file
+   * Chrcking for correct path value of properties file
    * 
    * @param path to search files
    * @throws NotDirectoryException
    */
-  public void pathValidation(String path) throws NotDirectoryException {
+  public void pathCheck(String path) throws NotDirectoryException {
     log.info("Inside pathValidation() method.");
     if (!Files.exists(Paths.get(path))) {
       throw new NotDirectoryException(String.format("%s is not a directory or not found!", path));
@@ -80,13 +80,13 @@ public class PropValidator {
   }
 
   /**
-   * Validating for proper source and destination file extension values of properties file
+   * Checking for proper source and destination file extension values of properties file
    * 
    * @param sourceFileExtension - extension of source file
    * @param destFileExtension - extension of destination file
    * @throws IncorrectFileFormatException
    */
-  public void extValidation(String sourceFileExtension, String destFileExtension)
+  public void extCheck(String sourceFileExtension, String destFileExtension)
       throws IncorrectFileFormatException {
     log.info("Inside extValidation() method.");
     List<String> sEnum =
@@ -98,12 +98,12 @@ public class PropValidator {
   }
 
   /**
-   * Validating for correct value of isSeparateSaveMode property
+   * Checking for correct value of isSeparateSaveMode property
    * 
    * @param saveMode for parse process
    * @throws IncorrectModeException
    */
-  public void modeValidation(String saveMode) throws IncorrectModeException {
+  public void modeCheck(String saveMode) throws IncorrectModeException {
     log.info("Inside modeValidation() method.");
     if (!(saveMode.equals(Constants.TRUE) || saveMode.equals(Constants.FALSE))) {
       throw new IncorrectModeException(

@@ -64,7 +64,7 @@ public class FileGuider {
    * @param destFileName - name of file to write parsed strings
    * @param destFileExtension - extension of file to write parsed strings
    */
-  public String destFileForming(String path, String destFileName, String destFileExtension) {
+  public String destFileForm(String path, String destFileName, String destFileExtension) {
     log.info("Inside destFileForming method.");
     return path.concat(File.separator).concat(destFileName)
         .concat(Constants.DOT).concat(destFileExtension);
@@ -78,8 +78,8 @@ public class FileGuider {
    * @return destFile - destination file for parsed strings
    * @throws IOException
    */
-  public File write(String destFile, List<String> parsedStrings) throws IOException {
-    log.info("Inside FileGuider's write method.");
+  public File writeStrings(String destFile, List<String> parsedStrings) throws IOException {
+    log.info("Inside FileGuider's writeStrings method.");
     return Files.write(Paths.get(destFile), (Iterable<String>) parsedStrings.stream()::iterator)
         .toFile();
   }
@@ -89,8 +89,8 @@ public class FileGuider {
    * 
    * @param files - source file to deleting
    */
-  public void delete(String file) {
+  public Boolean deleteFile(String file) {
     log.info("Inside FileGuider's delete method.");
-    new File(file).delete();
+    return new File(file).delete();
   }
 }

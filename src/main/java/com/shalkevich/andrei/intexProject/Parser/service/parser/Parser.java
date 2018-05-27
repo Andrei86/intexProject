@@ -35,7 +35,7 @@ public class Parser {
         key.append(str.replace(delimiter, Constants.DOT));
       } else {
         isPrevKey = true;
-        parsedStrings.add(key.toString() + stringForming(str, delimiter));
+        parsedStrings.add(key.toString() + stringForm(str, delimiter));
       }
     return parsedStrings;
   }
@@ -48,7 +48,7 @@ public class Parser {
    * @param delimiter - source file string delimiter
    * @return string assembled from last part of key and value
    */
-  public String stringForming(String trimmedString, String delimiter) {
+  public String stringForm(String trimmedString, String delimiter) {
     log.info(String.format("Inside Parser's stringForming method with %s and %s parameters",
         trimmedString, delimiter));
     String[] keyValuePair = trimmedString.split(delimiter);

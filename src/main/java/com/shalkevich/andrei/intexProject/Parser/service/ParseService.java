@@ -17,7 +17,7 @@ import com.shalkevich.andrei.intexProject.Parser.exception.NoFilesToParseExcepti
 import com.shalkevich.andrei.intexProject.Parser.exception.EmptyPropertyException;
 import com.shalkevich.andrei.intexProject.Parser.service.fileGuider.FileGuider;
 import com.shalkevich.andrei.intexProject.Parser.service.parser.Parser;
-import com.shalkevich.andrei.intexProject.Parser.service.validator.PropValidator;
+import com.shalkevich.andrei.intexProject.Parser.service.validator.Validator;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -45,7 +45,7 @@ public class ParseService {
   private String isSeparateSaveMode;
   private FileGuider fileGuider;
   private Parser parser;
-  private PropValidator validator;
+  private Validator validator;
 
   /**
    * Constructs ParseService object
@@ -55,7 +55,7 @@ public class ParseService {
    * @param validator to validation performance
    */
   @Autowired
-  public ParseService(FileGuider fileGuider, Parser parser, PropValidator validator) {
+  public ParseService(FileGuider fileGuider, Parser parser, Validator validator) {
     super();
     this.fileGuider = fileGuider;
     this.parser = parser;
@@ -71,14 +71,14 @@ public class ParseService {
    * @throws IncorrectFileFormatException
    * @throws IncorrectModeException
    */
-  public void validating() throws FileNotFoundException, EmptyPropertyException,
+  public void validate() throws FileNotFoundException, EmptyPropertyException,
       NotDirectoryException, IncorrectFileFormatException, IncorrectModeException {
     log.info("Inside ParseService's validating() method.");
     validator.propInit();
-    validator.nullValidation();
-    validator.pathValidation(path);
-    validator.extValidation(sourceFileExtension, destFileExtension);
-    validator.modeValidation(isSeparateSaveMode);
+    validator.emptyValueCheck();
+    validator.pathCheck(path);
+    validator.extCheck(sourceFileExtension, destFileExtension);
+    validator.modeCheck(isSeparateSaveMode);
   }
 
   /**
@@ -88,13 +88,13 @@ public class ParseService {
    * @throws IOException
    * @throws NoFilesToParseException
    */
-  public Map<String, List<String>> parsing() throws IOException, NoFilesToParseException {
+  public Map<String, List<String>> parse() throws IOException, NoFilesToParseException {
     log.info("Inside ParseService's parsing method.");
     Map<String, List<String>> fileStrings;
     if (Boolean.valueOf(isSeparateSaveMode)) {
-      fileStrings = separateProcessing();
+      fileStrings = separateProcess();
     } else {
-      fileStrings = singleProcessing();
+      fileStrings = singleProcess();
     }
     return fileStrings;
   }
@@ -106,7 +106,7 @@ public class ParseService {
    * @throws IOException
    * @throws NoFilesToParseException
    */
-  public Map<String, List<String>> separateProcessing()
+  public Map<String, List<String>> separateProcess()
       throws IOException, NoFilesToParseException {
     log.info("Inside ParseService's singleProcessing() method.");
     List<String> parsedStrings;
@@ -115,7 +115,7 @@ public class ParseService {
       parsedStrings =
           parser.getParsedStrings(delimiter, fileGuider.getTrimmedStrings(file, delimiter));
       fileStrings.put(
-          fileGuider.destFileForming(new File(file).getParent(), destFileName, destFileExtension),
+          fileGuider.destFileForm(new File(file).getParent(), destFileName, destFileExtension),
           parsedStrings);
     }
     return fileStrings;
@@ -128,7 +128,7 @@ public class ParseService {
    * @throws IOException
    * @throws NoFilesToParseException
    */
-  public Map<String, List<String>> singleProcessing() throws IOException, NoFilesToParseException {
+  public Map<String, List<String>> singleProcess() throws IOException, NoFilesToParseException {
     log.info("Inside ParseService's separateProcessing() method.");
     List<String> parsedStrings = new ArrayList<>();
     Map<String, List<String>> fileStrings = new HashMap<String, List<String>>();
@@ -136,7 +136,7 @@ public class ParseService {
       parsedStrings.addAll(
           parser.getParsedStrings(delimiter, fileGuider.getTrimmedStrings(file, delimiter)));
     }
-    fileStrings.put(fileGuider.destFileForming(path, destFileName, destFileExtension),
+    fileStrings.put(fileGuider.destFileForm(path, destFileName, destFileExtension),
         parsedStrings);
     return fileStrings;
   }
@@ -146,10 +146,10 @@ public class ParseService {
    * 
    * @throws IOException
    */
-  public void writing(Map<String, List<String>> fileStrings) throws IOException {
+  public void write(Map<String, List<String>> fileStrings) throws IOException {
     log.info("Inside ParseService's writing() method.");
     for (Map.Entry<String, List<String>> entry : fileStrings.entrySet()) {
-      fileGuider.write(entry.getKey(), entry.getValue());
+      fileGuider.writeStrings(entry.getKey(), entry.getValue());
     }
   }
 
@@ -159,7 +159,7 @@ public class ParseService {
    * @throws IOException
    * @throws NoFilesToParseException
    */
-  public void deleting() throws IOException, NoFilesToParseException {
+  public void delete() throws IOException, NoFilesToParseException {
     log.info("Inside ParseService's deleting() method.");
     List<String> sourceFiles = fileGuider.search(path, sourceFileExtension);
     sourceFiles.forEach((file) -> new File(file).delete());

@@ -26,9 +26,9 @@ public class ParseRunner {
     try {
       ApplicationContext context = new AnnotationConfigApplicationContext(ParseConfig.class);
       ParseService parseService = context.getBean(ParseService.class);
-      parseService.validating();
-      parseService.writing(parseService.parsing());
-      parseService.deleting();
+      parseService.validate();
+      parseService.write(parseService.parse());
+      parseService.delete();
     } catch (IOException | EmptyPropertyException | IncorrectFileFormatException 
         | NoFilesToParseException | IncorrectModeException e) {
       log.error(e.getClass().getSimpleName() + ": " + e.getMessage());
